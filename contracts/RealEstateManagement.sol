@@ -349,7 +349,7 @@ contract RealEstateManagement{
     }
 
     //Funciones Property
-    function createnNewProperty(string memory _province, string memory _district, string memory _addres, uint _area, address[] memory _owners, uint16[] memory _percentOwn) public{
+    function createnNewProperty(string memory _province, string memory _district, string memory _addres, uint _area, bytes32 _ipfsHash, address[] memory _owners, uint16[] memory _percentOwn) public{
         require(msg.sender == contractOwner, "You are not authorized");
         _province = _toLower(_province);
         _district = _toLower(_district);
@@ -358,6 +358,7 @@ contract RealEstateManagement{
         require(propertyMapping[propertyHash].exists == false, "Property already exists");
         for(uint i=0; i<_owners.length;i++){
             require(userMapping[_owners[i]].exists==true,"User does not exists");
+            // Debería ir estas dos lineas ?
             userPropertyOwnedMapping[_owners[i]].propertyHash = propertyHash;
             userPropertyOwnedMapping[_owners[i]].percentOwn = _percentOwn[i];
         }
@@ -366,10 +367,10 @@ contract RealEstateManagement{
         propertyMapping[propertyHash].district = stringToBytes32(_district);
         propertyMapping[propertyHash].addres = stringToBytes32(_addres);
         propertyMapping[propertyHash].area = _area;
+        propertyMapping[propertyHash].ipfsHash = _ipfsHash;
 
         propertyMapping[propertyHash].owners = _owners;
         propertyMapping[propertyHash].percentOwn = _percentOwn;
-
         /*
         for(uint i=0; i<_owners.length; i++){
             userPropertyOwnedMapping[_owners[i]].propertyHash = propertyHash;
