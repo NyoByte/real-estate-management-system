@@ -38,11 +38,6 @@ contract RealEstateManagement{
         RentState state;
     }
 
-    struct UserPropertyOwned{
-        bytes32 propertyHash;
-        uint16 percentOwn;
-    }
-
     struct Property{
         address[] owners;
         uint[] percentOwn;
@@ -74,8 +69,6 @@ contract RealEstateManagement{
     //Mappings
     mapping (bytes32 => Property) propertyMapping;
     bytes32[] propertyArray;
-
-    mapping(address => UserPropertyOwned) userPropertyOwnedMapping;
 
     mapping(bytes32 => Sell) sellMapping;
     bytes32[] sellArray;
@@ -134,10 +127,12 @@ contract RealEstateManagement{
         address[] memory propOwners = propertyMapping[_propertyHash].owners;
         uint[] memory propPercOwn = propertyMapping[_propertyHash].percentOwn;
         bool isOwner;
+        uint percOwn;
         for(uint i=0; i<propOwners.length; i++){
             if(propOwners[i] == msg.sender){
                 require(propPercOwn[i] >= _sellPercentage, "You don't have enough property percentage");
                 isOwner=true;
+                percOwn = propPercOwn[i];
             }
         }
         require(isOwner, "You are not owner of the property");
@@ -146,7 +141,7 @@ contract RealEstateManagement{
         bytes32 sellHash = keccak256(abi.encodePacked(_id, _propertyHash));
         sellMapping[sellHash].id = _id;
         sellMapping[sellHash].propertyHash = _propertyHash;
-        sellMapping[sellHash].percentOwn = userPropertyOwnedMapping[msg.sender].percentOwn;
+        sellMapping[sellHash].percentOwn = percOwn;
         sellMapping[sellHash].buyFrom = msg.sender;
         sellMapping[sellHash].sellTo = _sellTo;
         sellMapping[sellHash].sellPercentage = _sellPercentage;
@@ -266,7 +261,7 @@ contract RealEstateManagement{
     }
 
     //Funciones Property
-    function createnNewProperty(string memory _province, string memory _district, string memory _addres, uint _area, bytes32 _ipfsHash, address[] memory _owners, uint16[] memory _percentOwn) public{
+    function createnNewProperty(string memory _province, string memory _district, string memory _addres, uint _area, address[] memory _owners, uint16[] memory _percentOwn) public{
         require(msg.sender == contractOwner, "You are not authorized");
         _province = _toLower(_province);
         _district = _toLower(_district);
@@ -275,16 +270,12 @@ contract RealEstateManagement{
         require(propertyMapping[propertyHash].exists == false, "Property already exists");
         for(uint i=0; i<_owners.length;i++){
             require(userMapping[_owners[i]].exists==true,"User does not exists");
-            // Debería ir estas dos lineas ?
-            userPropertyOwnedMapping[_owners[i]].propertyHash = propertyHash;
-            userPropertyOwnedMapping[_owners[i]].percentOwn = _percentOwn[i];
         }
         //require(userMapping[accountaddress].exists);
         propertyMapping[propertyHash].province = stringToBytes32(_province);
         propertyMapping[propertyHash].district = stringToBytes32(_district);
         propertyMapping[propertyHash].addres = stringToBytes32(_addres);
         propertyMapping[propertyHash].area = _area;
-        propertyMapping[propertyHash].ipfsHash = _ipfsHash;
 
         propertyMapping[propertyHash].owners = _owners;
         propertyMapping[propertyHash].percentOwn = _percentOwn;
