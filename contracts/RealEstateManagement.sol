@@ -38,16 +38,6 @@ contract RealEstateManagement{
         RentState state;
     }
 
-    struct UserOwned{
-        uint number;
-        bytes32[] sellList;
-    }
-
-    struct UserRented{
-        uint number;
-        bytes32[] rentList;
-    }
-
     struct UserPropertyOwned{
         bytes32 propertyHash;
         uint16 percentOwn;
@@ -64,57 +54,17 @@ contract RealEstateManagement{
         bool exists;
     }
 
-    /*
-    struct Department{
-        address[] owners;
-        uint[] perOwnerPercentage;
-        bytes32 province; 
-        bytes32 district;
-        bytes32 addres;
-        uint floorNumber;
-        uint roomNumber;
-        uint area;
-        uint roomQuantity;
-        uint bathroomQuantity;
-        bool kitchen;
-        bool laundry;
-        bool terrace;
-        bool diningRoom;
-        bool parking;
-        bool elevator;
-        bytes32[] facilities;
-        bool exists;
-    }
-
-    struct House{
-        address[] owners;
-        uint[] perOwnerPercentage;
-        bytes32 province;
-        bytes32 district;
-        bytes32 addres;
-        uint area;
-        uint roomQuantity;
-        uint bathroomQuantity;
-        uint floorsQuantity;
-        bool kitchen;
-        bool laundry;
-        bool terrace;
-        bool diningRoom;
-        bool parking;
-        bool exists;
-    }
-    */
     address contractOwner;
     
     //Eventos
     event addNewProperty(bytes32 propertyHash);
-    //event addNewDepartment(bytes32 propertyHash);
-    //event addNewHouse(bytes32 propertyHash);
     event creationOfUser(address accountAddress);
     event creationOfSell(uint id, bytes32 sellHash);
-    event creationOfPaySell(uint id, bytes32 sellHash);
+    event sellPayed(bytes32 sellHash);
     event creationOfRent(uint id, bytes32 rentHash);
-    event creationOfPayRent(uint id, bytes32 rentHash);
+    event startOfRent(bytes32 rentHash);
+    event rentPayed(bytes32 rentHash);
+    event rentTerminated(bytes32 rentHash);
 
     constructor() public{
         contractOwner = msg.sender;
@@ -126,24 +76,12 @@ contract RealEstateManagement{
     bytes32[] propertyArray;
 
     mapping(address => UserPropertyOwned) userPropertyOwnedMapping;
-    
-    /*
-    mapping (bytes32 => Department) departmentMapping;
-    bytes32[] departmentArray;
-
-    mapping (bytes32 => House) houseMapping;
-    bytes32[] houseArray;
-    */
 
     mapping(bytes32 => Sell) sellMapping;
     bytes32[] sellArray;
 
     mapping(bytes32 => Rent) rentMapping;
     bytes32[] rentArray;
-
-    mapping(bytes32 => UserOwned) userOwnedMapping;
-    
-    mapping(bytes32 => UserRented) userRentedMapping;
     
     mapping(address => User) userMapping;
     address[] userArray;
@@ -187,31 +125,6 @@ contract RealEstateManagement{
         return userArray[_id];
     }
 
-    
-    //Funciones userOwned
-    function addUserOwned(bytes32 _dni, bytes32 _sellHash) public{
-        userOwnedMapping[_dni].number++;
-        userOwnedMapping[_dni].sellList.push(_sellHash);
-    }
-    
-    function getUserOwnedByDni(bytes32 _dni) public view returns (bytes32[] memory selledList){
-        require(userOwnedMapping[_dni].number > 0, "User has no sells");
-        return userOwnedMapping[_dni].sellList;
-    }
-    
-
-    //Funciones userRented
-    function addUserRented(bytes32 _dni, bytes32 _rentHash) public{
-        userRentedMapping[_dni].number++;
-        userRentedMapping[_dni].rentList.push(_rentHash);
-    }
-
-    function getUserRentedByDni(bytes32 _dni) public view returns (bytes32[] memory rentList){
-        require(userRentedMapping[_dni].number > 0, "User has no rents");
-        return userRentedMapping[_dni].rentList;
-    }
-
-
     //Funciones Sell
     function createSell(uint _price, bytes32 _propertyHash, address _sellTo, uint16 _sellPercentage) public{
         require(userMapping[msg.sender].exists == true, "Only registered users can create sells");
@@ -249,7 +162,7 @@ contract RealEstateManagement{
     }
     
 
-    function paySell(bytes32 _sellHash) public payable returns (bool message){
+    function paySell(bytes32 _sellHash) public payable{
         require(msg.sender == sellMapping[_sellHash].sellTo, "You are not the buyer of this sell");
         require(msg.value == sellMapping[_sellHash].sellPrice, "The amount is not correct");
         payable(sellMapping[_sellHash].buyFrom).transfer(msg.value);
@@ -272,7 +185,7 @@ contract RealEstateManagement{
         propertyMapping[sellMapping[_sellHash].propertyHash].owners.push(msg.sender);
         propertyMapping[sellMapping[_sellHash].propertyHash].percentOwn.push(sellMapping[_sellHash].sellPercentage);
         sellMapping[_sellHash].completed = true;
-        return true;
+        emit sellPayed(_sellHash);
     }
 
     //Funciones Rent
@@ -305,6 +218,7 @@ contract RealEstateManagement{
         rentMapping[rentHash].representative = msg.sender;
         rentMapping[rentHash].state = RentState.CREATED;
         rentArray.push(rentHash);
+        emit creationOfRent(_id, rentHash);
     }
 
     function agreeRent(bytes32 _rentHash) public{
@@ -329,6 +243,7 @@ contract RealEstateManagement{
         }
         payable(rentMapping[_rentHash].representative).transfer(msg.value);
         rentMapping[_rentHash].state = RentState.STARTED;
+        emit startOfRent(_rentHash);
     }
 
     function payRent(bytes32 _rentHash) public payable{
@@ -336,12 +251,14 @@ contract RealEstateManagement{
         require(msg.sender == rentMapping[_rentHash].rentedTo, "You are not tenant of this rent");
         require(msg.value == rentMapping[_rentHash].rentValue, "Wrong amount");
         payable(rentMapping[_rentHash].representative).transfer(msg.value);
+        emit rentPayed(_rentHash);
     }
 
     function terminateRent(bytes32 _rentHash) public payable{
         require(msg.sender == rentMapping[_rentHash].representative, "You are not representative of this rent owners");
         payable(rentMapping[_rentHash].rentedTo).transfer(msg.value);
         rentMapping[_rentHash].state = RentState.TERMINATED;
+        emit rentTerminated(_rentHash);
     }
 
     function getRentHashById(uint _id) public view returns(bytes32 _rentHash){
@@ -397,39 +314,6 @@ contract RealEstateManagement{
         
     }
 
-    //Funciones Department
-    /*
-    function createNewDepartment(string memory _province, string memory _district, string memory _addres, uint _area, uint _floorNumber, uint _roomNumber,
-        uint _roomQuantity, uint _bathroomQuantity, bool _kitchen, bool _laundry, bool _terrace, bool _diningRoom, bool _parking, bool _elevator, string[] memory _facilities) public{
-        require(msg.sender == contractOwner, "You are not unauthorized");
-        _province = _toLower(_province);
-        _district = _toLower(_district);
-        _addres = _toLower(_addres);
-        for(uint i=0; i < _facilities.length; i++){
-            _facilities[i] = _toLower(_facilities[i]);
-        }
-        bytes32 departmentHash = keccak256(abi.encodePacked(_province, _district, _addres));
-        require(departmentMapping[departmentHash].exists == false, "Department already exists");
-        departmentMapping[departmentHash].province = stringToBytes32(_province);
-        departmentMapping[departmentHash].district = stringToBytes32(_district);
-        departmentMapping[departmentHash].addres = stringToBytes32(_addres);
-        for(uint i=0; i < _facilities.length; i++){
-            departmentMapping[departmentHash].facilities[i] = stringToBytes32(_facilities[i]);
-        }
-        departmentMapping[departmentHash].area = _area;
-        departmentMapping[departmentHash].roomQuantity = _roomQuantity;
-        departmentMapping[departmentHash].bathroomQuantity = _bathroomQuantity;
-        departmentMapping[departmentHash].kitchen = _kitchen;
-        departmentMapping[departmentHash].laundry = _laundry;
-        departmentMapping[departmentHash].terrace = _terrace;
-        departmentMapping[departmentHash].diningRoom = _diningRoom;
-        departmentMapping[departmentHash].parking = _parking;
-        departmentMapping[departmentHash].elevator = _elevator;
-        departmentMapping[departmentHash].exists = true;
-        departmentArray.push(departmentHash);
-        emit addNewDepartment(departmentHash);
-    }
-    */
 
     //Funciones globales
     function _toLower(string memory str) internal pure returns (string memory) {
