@@ -4,8 +4,8 @@ contract RealEstateManagement{
 
     //Structs
     struct User{
-        bytes32 firstName;
         bytes32 dni;
+        bytes32 firstName;
         bytes32 lastName;
         bytes32 province;
         bytes32 district;
@@ -30,9 +30,9 @@ contract RealEstateManagement{
         uint id;
         bytes32 propertyHash;
         address[] rentedFrom;
+        address rentedTo;
         address representative;
         bool[] agreedOwners;
-        address rentedTo;
         uint securityDeposit;
         uint rentValue;
         RentState state;

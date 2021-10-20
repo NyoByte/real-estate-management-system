@@ -1,6 +1,7 @@
-import { Autocomplete, Box, Button, Grid, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Grid, Link, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { width } from "@mui/system";
 import React from "react";
+import {create} from 'ipfs-http-client';
 
 
 function TabPanel(props: any) {
@@ -61,9 +62,12 @@ type UsersState = {
     lastName: string,
     province: string,
     district: string,
-    walletAddress: string
+    walletAddress: string,
+    ipfsHash: string
 }
 
+// Test IPFS
+const ipfsAPI = create({host: 'ipfs.infura.io', port:5001, protocol: 'https'})
 
 class UsersComponent extends React.Component<{}, UsersState> {
 
@@ -73,19 +77,29 @@ class UsersComponent extends React.Component<{}, UsersState> {
         lastName: "",
         province: "",
         district: "",
-        walletAddress: ""
+        walletAddress: "",
+        ipfsHash:""
     }
 
     constructor(props: any){
         super(props)
 
         this.handleTextInputChange = this.handleTextInputChange.bind(this)
+        this.addToIPFS = this.addToIPFS.bind(this)
     }
 
     handleTextInputChange(event: any){
         let newState: any = {}
         newState[event.target.id] = event.target.value
         this.setState(newState)
+    }
+
+    addToIPFS = async (fileToUpload:any) => {
+        const result = [];
+        ipfsAPI.add(fileToUpload).then(response => {
+            result.push(response);
+            this.setState({ipfsHash: response.path});
+        })
     }
 
     render() {
@@ -139,8 +153,13 @@ class UsersComponent extends React.Component<{}, UsersState> {
                         </Grid>
                         <Grid item xs={12} />
                         <Grid item xs={12} sm={2} justifyContent="center">
-                            <Button variant="contained" fullWidth onClick={() => console.log(this.state)}>Save</Button>
+                            <Button variant="contained" fullWidth onClick={() => 
+                                {
+                                this.addToIPFS(JSON.stringify(this.state));                 
+                                }}>Save</Button>
                         </Grid>
+                        {/* Agregar visible despues de darle click a SAVE */}
+                        <Link href={'https:ipfs.io/ipfs/'+this.state.ipfsHash}>Link</Link>
                     </Grid>
                 </TabPanel>
                 <TabPanel value={this.state.tab} index={1}>
