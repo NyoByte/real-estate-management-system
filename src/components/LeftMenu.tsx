@@ -1,7 +1,7 @@
 import React from "react";
 import history from '../history'
 import Box from '@mui/material/Box';
-import { Divider, Drawer, DrawerProps, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import HouseIcon from '@mui/icons-material/House';
@@ -10,7 +10,7 @@ import RepeatIcon from '@mui/icons-material/Repeat';
 
 type LeftMenuProps = {
     open: boolean
-    onClose: Function
+    onClose: Function,
 }
 
 type LeftMenuState = {
@@ -67,7 +67,7 @@ class LeftMenuComponent extends React.Component<LeftMenuProps, LeftMenuState> {
               <ListItem button key={option.name}
               onClick={() => {
                   option.onClick()
-                  if(this.props.onClose) this.props.onClose()
+                  if(this.props.onClose) this.props.onClose(option.name)
                 }}
               >
                 <ListItemIcon>

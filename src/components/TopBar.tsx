@@ -6,6 +6,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 type TopBarProps = {
     onMenuClick: React.MouseEventHandler<HTMLButtonElement>
+    title: string
 }
 
 class TopBarComponent extends React.Component<TopBarProps, {}> {
@@ -25,7 +26,7 @@ class TopBarComponent extends React.Component<TopBarProps, {}> {
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            Real Estate Management System
+                            {this.props.title}
                         </Typography>
                         <Button color="inherit">Login</Button>
                     </Toolbar>
