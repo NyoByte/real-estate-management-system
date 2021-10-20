@@ -1,7 +1,6 @@
 import { Autocomplete, Box, Button, Grid, Link, Tab, Tabs, TextField, Typography } from "@mui/material";
-import { width } from "@mui/system";
 import React from "react";
-import {create} from 'ipfs-http-client';
+import IpfsService from "../services/ipfService";
 
 
 function TabPanel(props: any) {
@@ -18,7 +17,7 @@ function TabPanel(props: any) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
@@ -66,8 +65,8 @@ type UsersState = {
     ipfsHash: string
 }
 
-// Test IPFS
-const ipfsAPI = create({host: 'ipfs.infura.io', port:5001, protocol: 'https'})
+
+const ipfsService = new IpfsService()
 
 class UsersComponent extends React.Component<{}, UsersState> {
 
@@ -85,21 +84,12 @@ class UsersComponent extends React.Component<{}, UsersState> {
         super(props)
 
         this.handleTextInputChange = this.handleTextInputChange.bind(this)
-        this.addToIPFS = this.addToIPFS.bind(this)
     }
 
     handleTextInputChange(event: any){
         let newState: any = {}
         newState[event.target.id] = event.target.value
         this.setState(newState)
-    }
-
-    addToIPFS = async (fileToUpload:any) => {
-        const result = [];
-        ipfsAPI.add(fileToUpload).then(response => {
-            result.push(response);
-            this.setState({ipfsHash: response.path});
-        })
     }
 
     render() {
@@ -155,7 +145,7 @@ class UsersComponent extends React.Component<{}, UsersState> {
                         <Grid item xs={12} sm={2} justifyContent="center">
                             <Button variant="contained" fullWidth onClick={() => 
                                 {
-                                this.addToIPFS(JSON.stringify(this.state));                 
+                                    ipfsService.addToIpfs(JSON.stringify(this.state), (resp: any) => this.setState({ipfsHash: resp.path}))
                                 }}>Save</Button>
                         </Grid>
                         {/* Agregar visible despues de darle click a SAVE */}
