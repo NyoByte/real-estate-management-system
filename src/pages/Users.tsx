@@ -1,32 +1,33 @@
-import { Autocomplete, Box, Button, Grid, Link, Paper, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Checkbox, Grid, Link, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tab,Tabs, TextField, Typography } from "@mui/material";
 import React from "react";
 import IpfsService from "../services/ipfService";
 import { TabPanelComponent, a11yProps } from '../components/TabPanel'
-import { height } from "@mui/system";
 import CommonInfoService from '../services/commonInfoService'
-
 const provinceList = CommonInfoService.getProvinces()
 
 const districtList = CommonInfoService.getDistricts()
 
-const tableColumns = ["ID", "Wallet", "DNI", "First name", "Last name", "Province", "District"]
-
-const tableRows = [
-    { id: 1, wallet: "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", dni: "12345678", firstName: "User1", lastName: "User1", province: "Lima", district: "La Molina" },
-    { id: 2, wallet: "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", dni: "12345678", firstName: "User2", lastName: "User2", province: "Lima", district: "La Molina" },
-    { id: 3, wallet: "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", dni: "12345678", firstName: "User3", lastName: "User3", province: "Lima", district: "La Molina" },
-    { id: 4, wallet: "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", dni: "12345678", firstName: "User4", lastName: "User4", province: "Lima", district: "La Molina" },
-    { id: 5, wallet: "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", dni: "12345678", firstName: "User5", lastName: "User5", province: "Lima", district: "La Molina" },
-]
+const usersAddressList = ["0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb3", "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb4",
+"0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb5", "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb6"]
 
 type UsersState = {
     tab: number,
-    firstName: string,
-    lastName: string,
-    province: string,
-    district: string,
-    walletAddress: string,
-    ipfsHash: string
+    newUser: {
+        firstName: string,
+        lastName: string,
+        province: string,
+        district: string,
+        walletAddress: string,
+        ipfsHash: string
+    },
+    userSelectedInfo:{
+        dni: string,
+        firstName: string,
+        lastName: string,
+        province: string,
+        district: string,
+        walletAddress: string,
+    }
 }
 
 
@@ -36,24 +37,48 @@ class UsersComponent extends React.Component<{}, UsersState> {
 
     state: UsersState = {
         tab: 0,
-        firstName: "",
-        lastName: "",
-        province: "",
-        district: "",
-        walletAddress: "",
-        ipfsHash: ""
+        newUser: {
+            firstName: "",
+            lastName: "",
+            province: "",
+            district: "",
+            walletAddress: "",
+            ipfsHash: ""
+        },
+        userSelectedInfo: {
+            dni: "",
+            firstName: "",
+            lastName: "",
+            province: "",
+            district: "",
+            walletAddress: "",
+        }
     }
 
     constructor(props: any) {
         super(props)
 
         this.handleTextInputChange = this.handleTextInputChange.bind(this)
+        this.getUserInfo = this.getUserInfo.bind(this)
     }
 
     handleTextInputChange(event: any) {
         let newState: any = {}
         newState[event.target.id] = event.target.value
         this.setState(newState)
+    }
+
+    getUserInfo(){
+        this.setState({
+            userSelectedInfo: {
+                ...this.state.userSelectedInfo,
+                dni: "12345678",
+                firstName: "John",
+                lastName: "Doe",
+                province: "Lima",
+                district: "La Molina",
+            }
+        })
     }
 
     render() {
@@ -70,38 +95,57 @@ class UsersComponent extends React.Component<{}, UsersState> {
                     </Tabs>
                 </Box>
                 <TabPanelComponent value={this.state.tab} index={0}>
-                    <Grid minHeight={400}>
-                        <TableContainer component={Paper} style={{ height: 400 }}>
-                            <Table sx={{ minWidth: 650 }} aria-label="simple table" style={{ height: 400 }}>
-                                <TableHead>
-                                    <TableRow>
-                                        {
-                                            tableColumns.map((column, index) => (
-                                                <TableCell align={index == 0 ? "left" : "right"} style={{fontWeight: "bold"}}>{column}</TableCell>
-                                            ))
-                                        }
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {tableRows.map((row) => (
-                                        <TableRow
-                                            key={row.wallet}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    <Grid container justifyContent="center">
+                        <Grid item xs={12} sm={4}>
+                            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}  >
+                                {usersAddressList.map((address) => {
+                                    const labelId = `checkbox-list-label-${address}`;
+
+                                    return (
+                                        <ListItem
+                                            key={address}
+                                            disablePadding
                                         >
-                                            <TableCell component="th" scope="row">
-                                                {row.id}
-                                            </TableCell>
-                                            <TableCell align="right">{row.wallet}</TableCell>
-                                            <TableCell align="right">{row.dni}</TableCell>
-                                            <TableCell align="right">{row.firstName}</TableCell>
-                                            <TableCell align="right">{row.lastName}</TableCell>
-                                            <TableCell align="right">{row.province}</TableCell>
-                                            <TableCell align="right">{row.district}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                                            <ListItemButton role={undefined} 
+                                            //onClick={handleToggle(value)} 
+                                            dense>
+                                                <ListItemIcon>
+                                                    <Checkbox
+                                                        edge="start"
+                                                        //checked={checked.indexOf(value) !== -1}
+                                                        tabIndex={-1}
+                                                        //disableRipple
+                                                        onChange={(event) => this.setState({ userSelectedInfo: {...this.state.userSelectedInfo, walletAddress: address} })}
+                                                        inputProps={{ 'aria-labelledby': labelId }}
+                                                    />
+                                                </ListItemIcon>
+                                                <ListItemText id={labelId} primary={address} />
+                                            </ListItemButton>
+                                        </ListItem>
+                                    );
+                                })}
+                            </List>
+                        </Grid>
+                        <Grid item xs={12} sm={4} >
+                            <Grid marginBottom={2}>
+                                <Button variant="contained" onClick={this.getUserInfo} >Get info</Button>
+                            </Grid>
+                            <Typography variant="h6" gutterBottom component="div">
+                                DNI: {this.state.userSelectedInfo.dni}
+                            </Typography>
+                            <Typography variant="h6" gutterBottom component="div">
+                                First name: {this.state.userSelectedInfo.firstName}
+                            </Typography>
+                            <Typography variant="h6" gutterBottom component="div">
+                                Last name: {this.state.userSelectedInfo.lastName}
+                            </Typography>
+                            <Typography variant="h6" gutterBottom component="div">
+                                Province: {this.state.userSelectedInfo.province}
+                            </Typography>
+                            <Typography variant="h6" gutterBottom component="div">
+                                District: {this.state.userSelectedInfo.district}
+                            </Typography>
+                        </Grid>
                     </Grid>
                 </TabPanelComponent>
                 <TabPanelComponent value={this.state.tab} index={1}>
@@ -119,7 +163,7 @@ class UsersComponent extends React.Component<{}, UsersState> {
                                 options={provinceList}
                                 fullWidth
                                 onInputChange={(event, newInputValue) => {
-                                    this.setState({ province: newInputValue });
+                                    this.setState({ newUser: { ...this.state.newUser, province: newInputValue } })
                                 }}
                                 renderInput={(params) => <TextField {...params} label="Province" variant="standard" />}
                             />
@@ -131,7 +175,7 @@ class UsersComponent extends React.Component<{}, UsersState> {
                                 options={districtList}
                                 fullWidth
                                 onInputChange={(event, newInputValue) => {
-                                    this.setState({ district: newInputValue });
+                                    this.setState({ newUser: { ...this.state.newUser, district: newInputValue } })
                                 }}
                                 renderInput={(params) => <TextField {...params} label="District" variant="standard" />}
                             />
@@ -141,18 +185,18 @@ class UsersComponent extends React.Component<{}, UsersState> {
                             <TextField label="Wallet addres" id={"walletAddress"} variant="standard" fullWidth onChange={this.handleTextInputChange} />
                         </Grid>
                         <Grid item xs={12} />
-                        <Grid item xs={12} sm={2} justifyContent="center">
+                        <Grid item xs={10} sm={2} justifyContent="center">
                             <Button variant="contained" fullWidth onClick={() => {
-                                ipfsService.addToIpfs(JSON.stringify(this.state), (resp: any) => this.setState({ ipfsHash: resp.path }))
+                                ipfsService.addToIpfs(JSON.stringify(this.state), (resp: any) => this.setState({ newUser: { ...this.state.newUser, ipfsHash: resp } }))
                             }}>Save</Button>
                         </Grid>
                         <Grid item xs={12} />
                         <Grid item xs={8} sm={4} justifyContent="center">
-                            <TextField id="outlined-basic" label="IPFS HASH" variant="outlined" fullWidth disabled value={this.state.ipfsHash} />
+                            <TextField id="outlined-basic" label="IPFS HASH" variant="outlined" fullWidth disabled value={this.state.newUser.ipfsHash} />
                         </Grid>
                         <Grid item xs={4} sm={2} justifyContent="center">
                             {/* Agregar visible despues de darle click a SAVE */}
-                            <Link href={'https:ipfs.io/ipfs/' + this.state.ipfsHash}>GO TO IPFS </Link>
+                            <Link href={'https:ipfs.io/ipfs/' + this.state.newUser.ipfsHash}>GO TO IPFS </Link>
                         </Grid>
 
                     </Grid>
