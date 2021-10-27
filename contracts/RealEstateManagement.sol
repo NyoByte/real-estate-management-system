@@ -84,7 +84,7 @@ contract RealEstateManagement{
 
     //Funciones User
     function createNewUser(string memory _firstName, string memory _lastName, string memory _province, string memory _district, address _walletaddress, string memory _dni) public{
-        require(msg.sender == contractOwner, "You are not unauthorized");
+        require(msg.sender == contractOwner, "You are not authorized");
         _firstName = _toLower(_firstName);
         _lastName = _toLower(_lastName);
         _province = _toLower(_province);
@@ -114,7 +114,7 @@ contract RealEstateManagement{
         return userArray.length;
     }
 
-    function getUserAdressById(uint _id) public view returns (address accountaddress){
+    function getUserAddressById(uint _id) public view returns (address accountaddress){
         return userArray[_id];
     }
 
