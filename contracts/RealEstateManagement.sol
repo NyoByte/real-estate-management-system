@@ -331,4 +331,5 @@ contract RealEstateManagement{
             result := mload(add(source, 32))
         }
     }
+
 }
