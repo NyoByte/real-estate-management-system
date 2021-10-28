@@ -36,11 +36,17 @@ module.exports = {
    */
 
   networks: {
-    ourTestNet: {
+    pow: {
       host: "127.0.0.1",
       port: 8545,
       network_id: "*" ,
       from:  process.env.DEPLOY_ADDRESS
+    },
+    poa: {
+      host: "127.0.0.1",
+      port: 8545,
+      network_id: "*" ,
+      from:  process.env.DEPLOY_ADDRESS_POA
     },
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
