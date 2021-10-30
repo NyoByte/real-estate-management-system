@@ -78,7 +78,7 @@ contract('RealEstateManagement', function (accounts) {
 
         start = new Date().getTime();
         // Obtain gas used from the receipt
-        receipt = await rem.createRent(propertyHash,walletUse4,4,2, {from: accounts[2]});
+        receipt = await rem.createRent(propertyHash,walletUser4,4,2, {from: accounts[2]});
         end = new Date().getTime();
         console.log(`Transaction time: ${end - start}`);
         gasUsed = receipt.receipt.gasUsed;
