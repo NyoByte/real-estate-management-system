@@ -4,14 +4,16 @@ contract('RealEstateManagement', function (accounts) {
     //let rem = RealEstateManagement.new( {from: accounts[0]});
     before(async function () {
         rem = await RealEstateManagement.new({ from: accounts[1] });
-        //Usuarios para Nyo-Poa
+        //Usuarios para Nyo-PoW
+        //truffle test --network pow
+        //truffle test ./test/TestRealEstateSell.js
         //admin
-        walletAdmin = "0x77aad785F37FF010C22203BCB867B4B00eeF5914";
+        walletAdmin = "0xC4eb09c84dcA2af4FC06E2aEc9001D174F3C7d13";
         //users
-        walletUser1 = "0x176411Fde97F4c9CD04166cfD3B986045235F9E2"; //con propiedad inicial
-        walletUser2 = "0xfc1110E952C42fa6c4C0A24eE4fB4D34Fe95758b"; //con propiedad inicial
-        walletUser3 = "0x47822E2ad973a0971107F93952d418df82b0eE99"; //para createSell
-        walletUser4 = "0x89ef77a3C018454A7bf7D7066b7B3d0554793501"; //para createRent
+        walletUser1 = "0x9FA9D5D730631d5ad1A5ecBC2Df7240d724276A6"; //con propiedad inicial
+        walletUser2 = "0x9a7cc61f961614A1aF1B563238fEa878222dECAd"; //con propiedad inicial
+        walletUser3 = "0xE8cAcd04313a771422c35606AC5117ac11C7Ca2e"; //para createSell
+        walletUser4 = "0xEf001b4d579724F36817F629d84652c2B39207f1"; //para createRent
     })
 
     it("Test Sell", async () => {
