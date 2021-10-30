@@ -14,8 +14,9 @@ contract('RealEstateManagement', function (accounts) {
         walletUser4 = "0x89ef77a3C018454A7bf7D7066b7B3d0554793501"; //para createRent
     })
 
-    it("Test User creation", async () => {
-        console.log("Test User creation:")
+    it("Test Rent", async () => {
+        //============ Creacion de usuarios ============
+        console.log("\n\nTest User creation:")
         var initial = await web3.eth.getBalance(accounts[1]);
         console.log(`Gas Initial: ${initial.toString()}`);
         var start = new Date().getTime();
@@ -42,7 +43,7 @@ contract('RealEstateManagement', function (accounts) {
         assert.equal(userAddress, walletUser1, "User not created correctly");
 
         
-
+        //============ Creacion de la propiedad ============
         console.log("\n\nTest Property creation")
         // Initial balance of the account
         initial = await web3.eth.getBalance(accounts[1]);
@@ -66,7 +67,7 @@ contract('RealEstateManagement', function (accounts) {
         console.log(`Gas Final: ${final.toString()}`);
 
 
-
+        //============ Creacion de la renta ============
         console.log("\n\nTest Rent creation")
         // Initial balance of the account
         const propertyHash = await rem.getPropertyHashById(0)
@@ -75,7 +76,7 @@ contract('RealEstateManagement', function (accounts) {
 
         start = new Date().getTime();
         // Obtain gas used from the receipt
-        receipt = await rem.createRent(2,propertyHash,walletUser3,4,2, {from: accounts[2]});
+        receipt = await rem.createRent(propertyHash,walletUse4,4,2, {from: accounts[2]});
         end = new Date().getTime();
         console.log(`Transaction time: ${end - start}`);
         gasUsed = receipt.receipt.gasUsed;
@@ -94,7 +95,7 @@ contract('RealEstateManagement', function (accounts) {
 
         //assert.equal(hash, rem.getSellHashById(0), "Property not created correctly");
 
-
+        //============ Estar de acuerdo con la renta ============
         console.log("\n\nTest agree rent")
         // Initial balance of the account
         const rentHash = await rem.getRentHashById(0)
@@ -115,19 +116,19 @@ contract('RealEstateManagement', function (accounts) {
         console.log(`GasPrice: ${tx.gasPrice}`);
 
         // Final balance
-        final = await web3.eth.getBalance(walletUser3);
+        final = await web3.eth.getBalance(walletUser2);
         console.log(`Gas Final: ${final.toString()}`);
 
 
-
+        //============ Pago del depósito ============
         console.log("\n\nTest pay security deposit")
         // Initial balance of the account
-        initial = await web3.eth.getBalance(walletUser3);
+        initial = await web3.eth.getBalance(walletUser4);
         console.log(`Gas Initial: ${initial.toString()}`);
 
         start = new Date().getTime();
         // Obtain gas used from the receipt
-        receipt = await rem.paySecurityDeposit(rentHash, {from: walletUser3,  value: web3.utils.toWei('4', 'ether')});
+        receipt = await rem.paySecurityDeposit(rentHash, {from: walletUser4,  value: web3.utils.toWei('4', 'ether')});
         end = new Date().getTime();
         console.log(`Transaction time: ${end - start}`);
         gasUsed = receipt.receipt.gasUsed;
@@ -139,19 +140,19 @@ contract('RealEstateManagement', function (accounts) {
         console.log(`GasPrice: ${tx.gasPrice}`);
 
         // Final balance
-        final = await web3.eth.getBalance(walletUser3);
+        final = await web3.eth.getBalance(walletUser4);
         console.log(`Gas Final: ${final.toString()}`);
 
 
-
+        //============ Pago de la renta ============
         console.log("\n\nTest pay rent")
         // Initial balance of the account
-        initial = await web3.eth.getBalance(walletUser3);
+        initial = await web3.eth.getBalance(walletUser4);
         console.log(`Gas Initial: ${initial.toString()}`);
 
         start = new Date().getTime();
         // Obtain gas used from the receipt
-        receipt = await rem.payRent(rentHash, {from: walletUser3,  value: web3.utils.toWei('2', 'ether')});
+        receipt = await rem.payRent(rentHash, {from: walletUser4,  value: web3.utils.toWei('2', 'ether')});
         end = new Date().getTime();
         console.log(`Transaction time: ${end - start}`);
         gasUsed = receipt.receipt.gasUsed;
@@ -163,7 +164,7 @@ contract('RealEstateManagement', function (accounts) {
         console.log(`GasPrice: ${tx.gasPrice}`);
 
         // Final balance
-        final = await web3.eth.getBalance(walletUser3);
+        final = await web3.eth.getBalance(walletUser4);
         console.log(`Gas Final: ${final.toString()}`);
 
     });

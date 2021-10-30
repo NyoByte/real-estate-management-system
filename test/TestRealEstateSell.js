@@ -14,9 +14,10 @@ contract('RealEstateManagement', function (accounts) {
         walletUser4 = "0x89ef77a3C018454A7bf7D7066b7B3d0554793501"; //para createRent
     })
 
-    it("Test User creation", async () => {
+    it("Test Sell", async () => {
         //console.log(web3.utils.toWei(2, 'ether'));
-        console.log("Test User creation:")
+        //============ Creacion de usuarios ============
+        console.log("\n\nTest User creation:")
         var initial = await web3.eth.getBalance(accounts[1]);
         console.log(`Gas Initial: ${initial.toString()}`);
         var start = new Date().getTime();
@@ -43,7 +44,7 @@ contract('RealEstateManagement', function (accounts) {
         assert.equal(userAddress, walletUser1, "User not created correctly");
 
         
-
+        //============ Creacion de la propiedad ============
         console.log("\n\nTest Property creation")
         // Initial balance of the account
         initial = await web3.eth.getBalance(accounts[1]);
@@ -67,7 +68,7 @@ contract('RealEstateManagement', function (accounts) {
         console.log(`Gas Final: ${final.toString()}`);
 
 
-
+        //============ Creacion de la venta ============
         console.log("\n\nTest Sell creation")
         // Initial balance of the account
         const propertyHash = await rem.getPropertyHashById(0)
@@ -95,7 +96,7 @@ contract('RealEstateManagement', function (accounts) {
 
         //assert.equal(hash, rem.getSellHashById(0), "Property not created correctly");
 
-
+        //============ Pago de la venta ============
         console.log("\n\nTest pay sell")
         // Initial balance of the account
         const sellHash = await rem.getSellHashById(0)
@@ -118,8 +119,6 @@ contract('RealEstateManagement', function (accounts) {
         // Final balance
         final = await web3.eth.getBalance(walletUser3);
         console.log(`Gas Final: ${final.toString()}`);
-
-
 
     });
 });
