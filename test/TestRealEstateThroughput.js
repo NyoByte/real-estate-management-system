@@ -17,11 +17,17 @@ contract('RealEstateManagement', function (accounts) {
 
     it("Test multiple sells 1", () => {
         console.log("Starting...")
+        let end = false
         for(i=2;i<9;i++){
             rem.createSell(2,propertyHash,accounts[i],1, {from: accounts[1]}).then(function (tx) {
+                if(i==8){
+                    end = true
+                }
                 console.log("Sell created")
                 console.log(tx)
             })
+        }
+        while(!end){
         }
     });
 });
