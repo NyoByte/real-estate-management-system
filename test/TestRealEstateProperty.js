@@ -4,14 +4,14 @@ contract('RealEstateManagement', function (accounts) {
     //let rem = RealEstateManagement.new( {from: accounts[0]});
     before(async function () {
         rem = await RealEstateManagement.new({ from: accounts[1] });
-        //Usuarios para Nyo-PoW
-        //truffle test --network pow
-        //truffle test ./test/TestRealEstateProperty.js --network pow
+        //Usuarios para Nyo-PoA
+        //truffle test --network poa
+        //truffle test ./test/TestRealEstateProperty.js --network poa
         //admin
-        walletAdmin = "0xC4eb09c84dcA2af4FC06E2aEc9001D174F3C7d13";
+        walletAdmin = "0x77aad785F37FF010C22203BCB867B4B00eeF5914";
         //users
-        walletUser1 = "0x9FA9D5D730631d5ad1A5ecBC2Df7240d724276A6"; //con propiedad inicial
-        walletUser2 = "0x9a7cc61f961614A1aF1B563238fEa878222dECAd"; //con propiedad inicial
+        walletUser1 = "0x176411Fde97F4c9CD04166cfD3B986045235F9E2"; //con propiedad inicial
+        walletUser2 = "0xfc1110E952C42fa6c4C0A24eE4fB4D34Fe95758b"; //con propiedad inicial
         //Variables
         iteracciones = 30;
         media = 0;

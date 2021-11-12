@@ -4,13 +4,13 @@ contract('RealEstateManagement', function (accounts) {
     //let rem = RealEstateManagement.new( {from: accounts[0]});
     before(async function () {
         rem = await RealEstateManagement.new({ from: accounts[1] });
-        //Usuarios para Nyo-PoW
-        //truffle test --network pow
-        //truffle test ./test/TestRealEstateUsers.js --network pow
+        //Usuarios para Nyo-PoA
+        //truffle test --network poa
+        //truffle test ./test/TestRealEstateUsers.js --network poa
         //admin
-        walletAdmin = "0xC4eb09c84dcA2af4FC06E2aEc9001D174F3C7d13";
+        walletAdmin = "0x77aad785F37FF010C22203BCB867B4B00eeF5914";
         //users
-        walletUser1 = "0x9FA9D5D730631d5ad1A5ecBC2Df7240d724276A6"; //usuario1
+        walletUser1 = "0x176411Fde97F4c9CD04166cfD3B986045235F9E2"; //usuario1
         //Variables
         iteracciones = 100;
         media = 0;

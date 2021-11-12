@@ -6,7 +6,7 @@ contract('RealEstateManagement', function (accounts) {
         rem = await RealEstateManagement.new({ from: accounts[1] });
         //Usuarios para Nyo-PoA
         //truffle test --network poa
-        //truffle test ./test/TestRealEstateSell.js
+        //truffle test ./test/TestRealEstateSell.js --network poa
         //admin
         walletAdmin = "0x77aad785F37FF010C22203BCB867B4B00eeF5914";
         //users
