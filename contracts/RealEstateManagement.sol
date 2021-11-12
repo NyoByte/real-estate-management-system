@@ -100,6 +100,13 @@ contract RealEstateManagement{
         userArray.push(_walletaddress);
         emit creationOfUser(_walletaddress);
     }
+    function deleteUser(address _walletaddress) public{
+        require(msg.sender == contractOwner, "You are not unauthorized");
+        require(userMapping[_walletaddress].exists == true, "User no exists");
+        userMapping[_walletaddress].exists = false;
+        userArray.pop();
+        emit creationOfUser(_walletaddress);
+    }
 
     function getUserDetailsByAddress(address accountaddress) public view returns(bytes32 firstName, bytes32 lastName, bytes32 province, bytes32 district, bytes32 dni){
         require(userMapping[accountaddress].exists == true, "User does not exist");
@@ -289,7 +296,13 @@ contract RealEstateManagement{
         propertyArray.push(propertyHash);
         emit addNewProperty(propertyHash);
     }
-    
+    function deleteProperty(bytes32 propertyHash) public{
+        require(msg.sender == contractOwner, "You are not authorized");
+        require(propertyMapping[propertyHash].exists == true, "User no exists");
+        propertyMapping[propertyHash].exists = false;
+        propertyArray.pop();
+        emit addNewProperty(propertyHash);
+    }
     function getPropertyHashById(uint id) public view returns(bytes32 propertyHash) {
         return propertyArray[id];
     }

@@ -40,6 +40,7 @@ module.exports = {
       host: "127.0.0.1",
       port: 8545,
       network_id: "*" ,
+      timeout: 500000,
       from:  process.env.DEPLOY_ADDRESS
     },
     poa: {
@@ -88,7 +89,7 @@ module.exports = {
 
   // Set default mocha options here, use special reporters etc.
   mocha: {
-    // timeout: 100000
+    timeout: 500000
   },
 
   // Configure your compilers
