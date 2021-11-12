@@ -3,7 +3,13 @@ var RealEstateManagement = artifacts.require("./RealEstateManagement.sol");
 contract('RealEstateManagement', function (accounts) {
     //let rem = RealEstateManagement.new( {from: accounts[0]});
     before(async function () {
+        var initial = await web3.eth.getBalance(accounts[1]);
+        console.log(`Gas Initial: ${initial.toString()}`);
+
         rem = await RealEstateManagement.new({ from: accounts[1] });
+
+        var final = await web3.eth.getBalance(accounts[1]);
+        console.log(`Gas Final: ${final.toString()}`);
         //Usuarios para Nyo-PoA
         //admin
         walletAdmin = "0x77aad785F37FF010C22203BCB867B4B00eeF5914";
