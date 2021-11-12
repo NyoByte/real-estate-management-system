@@ -14,7 +14,7 @@ contract('RealEstateManagement', function (accounts) {
         walletUser2 = "0x9a7cc61f961614A1aF1B563238fEa878222dECAd"; //con propiedad inicial
         walletUser3 = "0xE8cAcd04313a771422c35606AC5117ac11C7Ca2e"; //para createSell
         //Variables
-        iteracciones = 2;
+        iteracciones = 30;
         media = 0;
         varianza = 0;
         arrayTime = new Array();

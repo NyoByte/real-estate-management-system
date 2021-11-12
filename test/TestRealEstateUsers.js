@@ -12,7 +12,7 @@ contract('RealEstateManagement', function (accounts) {
         //users
         walletUser1 = "0x9FA9D5D730631d5ad1A5ecBC2Df7240d724276A6"; //usuario1
         //Variables
-        iteracciones = 2;
+        iteracciones = 100;
         media = 0;
         varianza = 0;
         arrayTime = new Array();

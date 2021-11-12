@@ -13,7 +13,7 @@ contract('RealEstateManagement', function (accounts) {
         walletUser1 = "0x9FA9D5D730631d5ad1A5ecBC2Df7240d724276A6"; //con propiedad inicial
         walletUser2 = "0x9a7cc61f961614A1aF1B563238fEa878222dECAd"; //con propiedad inicial
         //Variables
-        iteracciones = 2;
+        iteracciones = 30;
         media = 0;
         varianza = 0;
         arrayTime = new Array();
