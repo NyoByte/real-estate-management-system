@@ -1,15 +1,13 @@
-import { Autocomplete, Box, Button, Checkbox, FormLabel, Grid, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Checkbox, FormLabel, Grid, IconButton, Link, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, TextField, Typography } from "@mui/material";
 import React from "react";
 import { TabPanelComponent, a11yProps } from '../components/TabPanel'
 import CommonInfoService from "../services/commonInfoService";
 import AddIcon from '@mui/icons-material/Add';
+import IpfsService from "../services/ipfService";
 
 const provinceList = CommonInfoService.getProvinces()
 
 const districtList = CommonInfoService.getDistricts()
-
-const propertyHashList = ["0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb3", "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb4",
-    "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb5", "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb6"]
 
 type PropertiesState = {
     tab: number,
@@ -21,6 +19,7 @@ type PropertiesState = {
         owners: string[],
         ownersPercents: number[],
         extraInfo: string,
+        ipfsHash: string
     },
     selectedProperty: {
         hash: string,
@@ -31,10 +30,19 @@ type PropertiesState = {
         owners: string[],
         ownersPercents: number[],
         extraInfo: string,
-    }
+    },
+    propertyList: any[]
 }
 
-class PropertiesComponent extends React.Component<{}, PropertiesState> {
+type PropertiesProps = {
+    contract?: any,
+    accounts?: any,
+    web3?: any,
+}
+
+const ipfsService = new IpfsService()
+
+class PropertiesComponent extends React.Component<PropertiesProps, PropertiesState> {
 
     state: PropertiesState = {
         tab: 0,
@@ -46,6 +54,7 @@ class PropertiesComponent extends React.Component<{}, PropertiesState> {
             address: "",
             area: 0,
             extraInfo: "",
+            ipfsHash: ''
         },
         selectedProperty: {
             hash: "",
@@ -56,26 +65,54 @@ class PropertiesComponent extends React.Component<{}, PropertiesState> {
             address: "",
             area: 0,
             extraInfo: "",
-        }
+        },
+        propertyList: [],
     }
 
     constructor(props: any) {
         super(props)
         this.getPropertyInfo = this.getPropertyInfo.bind(this)
+        this.createNewProperty = this.createNewProperty.bind(this)
+        this.getProperties()
+    }
+
+    getProperties() {
+        this.props.contract.methods.getPropertyArray().call().then((res: any) => {
+            console.log(res)
+            this.setState({
+                propertyList: res
+            })
+        })
+    }
+
+    createNewProperty(){
+        ipfsService.addToIpfs(JSON.stringify(this.state.newProperty.extraInfo), (resp: any) => {
+            console.log(resp)
+            this.setState({ newProperty: { ...this.state.newProperty, ipfsHash: resp.path } })
+            this.props.contract.methods.createnNewProperty(this.state.newProperty.province, this.state.newProperty.district, 
+                this.state.newProperty.address, this.state.newProperty.area, 
+                this.state.newProperty.owners, this.state.newProperty.ownersPercents, 
+                this.state.newProperty.ipfsHash).send({ from: this.props.accounts[0] }).then((response: any) => {
+                    console.log(response)
+                    this.getProperties()
+                })
+        })
     }
 
     getPropertyInfo(){
-        this.setState({
-            selectedProperty: {
-                hash: this.state.selectedProperty.hash,
-                province: "Lima",
-                district: "San Isidro",
-                address: "Av. Lima 1234",
-                area: 100,
-                owners: ["0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb3"],
-                ownersPercents: [50, 50],
-                extraInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            }})
+        this.props.contract.methods.getPropertyByHash(this.state.selectedProperty.hash).call().then((res: any) => {
+            this.setState({
+                selectedProperty: {
+                    ...this.state.selectedProperty,
+                    province: this.props.web3.utils.hexToUtf8(res.province),
+                    district: this.props.web3.utils.hexToUtf8(res.district),
+                    address: this.props.web3.utils.hexToUtf8(res.addres),
+                    area: res.area,
+                    owners: res.owners,
+                    ownersPercents: res.percentOwn,
+                    extraInfo: this.props.web3.utils.hexToUtf8(res.ipfsHash),
+                }})
+        })
     }
 
     render() {
@@ -95,7 +132,7 @@ class PropertiesComponent extends React.Component<{}, PropertiesState> {
                     <Grid container justifyContent="center">
                         <Grid item xs={12} sm={4}>
                             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}  >
-                                {propertyHashList.map((address) => {
+                                {this.state.propertyList.map((address) => {
                                     const labelId = `checkbox-list-label-${address}`;
 
                                     return (
@@ -168,9 +205,7 @@ class PropertiesComponent extends React.Component<{}, PropertiesState> {
                             <Typography variant="h6" gutterBottom component="div">
                                 Extra info:
                             </Typography>
-                            <Typography variant="body1" component="div">
-                                {this.state.selectedProperty.extraInfo}
-                            </Typography>
+                            {this.state.selectedProperty.extraInfo &&<Link href={'https:ipfs.io/ipfs/' + this.state.selectedProperty.extraInfo}>GO TO IPFS </Link>}
                         </Grid>
                     </Grid>
                 </TabPanelComponent>
@@ -257,8 +292,8 @@ class PropertiesComponent extends React.Component<{}, PropertiesState> {
                             />
                         </Grid>
                         <Grid item xs={12} />
-                        <Grid item xs={12} sm={10} justifyContent="center">
-                            <Button variant="contained" fullWidth onClick={ev => console.log(this.state.newProperty)} >Save</Button>
+                        <Grid item xs={12} sm={6} md={3} justifyContent="center">
+                            <Button variant="contained" fullWidth onClick={ev => this.createNewProperty()} >Save</Button>
                         </Grid>
                     </ Grid>
                 </TabPanelComponent>

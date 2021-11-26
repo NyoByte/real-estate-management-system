@@ -1,5 +1,5 @@
 import { Autocomplete, Box, Button, Checkbox, Grid, Link, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tab,Tabs, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import IpfsService from "../services/ipfService";
 import { TabPanelComponent, a11yProps } from '../components/TabPanel'
 import CommonInfoService from '../services/commonInfoService'
@@ -7,14 +7,12 @@ const provinceList = CommonInfoService.getProvinces()
 
 const districtList = CommonInfoService.getDistricts()
 
-const usersAddressList = ["0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb3", "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb4",
-"0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb5", "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb6"]
-
 type UsersState = {
     tab: number,
     newUser: {
         firstName: string,
         lastName: string,
+        dni: string,
         province: string,
         district: string,
         walletAddress: string,
@@ -27,22 +25,30 @@ type UsersState = {
         province: string,
         district: string,
         walletAddress: string,
-    }
+    },
+    usersList?: any[]
+}
+
+type UsersProps = {
+    contract?: any,
+    accounts?: any,
+    web3?: any,
 }
 
 
 const ipfsService = new IpfsService()
 
-class UsersComponent extends React.Component<{}, UsersState> {
+class UsersComponent extends React.Component<UsersProps, UsersState> {
 
     state: UsersState = {
         tab: 0,
         newUser: {
             firstName: "",
             lastName: "",
+            dni: "",
             province: "",
             district: "",
-            walletAddress: "",
+            walletAddress: '',
             ipfsHash: ""
         },
         userSelectedInfo: {
@@ -60,24 +66,46 @@ class UsersComponent extends React.Component<{}, UsersState> {
 
         this.handleTextInputChange = this.handleTextInputChange.bind(this)
         this.getUserInfo = this.getUserInfo.bind(this)
+        this.saveUser = this.saveUser.bind(this)
+        this.getUsers()
+    }
+
+    getUsers(){
+        this.props.contract.methods.getUsersArray().call().then((users:any) => {
+            this.setState({
+                usersList: users
+            })
+        })
     }
 
     handleTextInputChange(event: any) {
         let newState: any = {}
         newState[event.target.id] = event.target.value
-        this.setState(newState)
+        this.setState({newUser: {...this.state.newUser, ...newState}})
     }
 
     getUserInfo(){
-        this.setState({
-            userSelectedInfo: {
-                ...this.state.userSelectedInfo,
-                dni: "12345678",
-                firstName: "John",
-                lastName: "Doe",
-                province: "Lima",
-                district: "La Molina",
-            }
+        console.log(this.state.userSelectedInfo.walletAddress)
+
+        this.props.contract.methods.getUserDetailsByAddress(this.state.userSelectedInfo.walletAddress).call().then((user:any) => {
+            this.setState({
+                userSelectedInfo: {
+                    ...this.state.userSelectedInfo,
+                    dni: this.props.web3.utils.hexToUtf8(user.dni),
+                    firstName: this.props.web3.utils.hexToUtf8(user.firstName),
+                    lastName: this.props.web3.utils.hexToUtf8(user.lastName),
+                    province: this.props.web3.utils.hexToUtf8(user.province),
+                    district: this.props.web3.utils.hexToUtf8(user.district),
+                }
+            })
+        })
+    }
+
+    saveUser(){
+        console.log(this.state.newUser)
+        this.props.contract.methods.createNewUser(this.state.newUser.firstName, this.state.newUser.lastName, this.state.newUser.province, this.state.newUser.district, this.state.newUser.walletAddress, this.state.newUser.dni).send({from: this.props.accounts[0]}).then((response:any)=>{
+            console.log(response)
+            this.getUsers()
         })
     }
 
@@ -98,7 +126,7 @@ class UsersComponent extends React.Component<{}, UsersState> {
                     <Grid container justifyContent="center">
                         <Grid item xs={12} sm={4}>
                             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}  >
-                                {usersAddressList.map((address) => {
+                                {this.state.usersList && this.state.usersList.map((address) => {
                                     const labelId = `checkbox-list-label-${address}`;
 
                                     return (
@@ -158,6 +186,10 @@ class UsersComponent extends React.Component<{}, UsersState> {
                         </Grid>
                         <Grid item xs={12} />
                         <Grid item xs={12} sm={6}>
+                            <TextField label="DNI" id={"dni"} variant="standard" fullWidth onChange={this.handleTextInputChange} />
+                        </Grid>
+                        <Grid item xs={12} />
+                        <Grid item xs={12} sm={6}>
                             <Autocomplete
                                 disablePortal
                                 options={provinceList}
@@ -186,17 +218,7 @@ class UsersComponent extends React.Component<{}, UsersState> {
                         </Grid>
                         <Grid item xs={12} />
                         <Grid item xs={10} sm={2} justifyContent="center">
-                            <Button variant="contained" fullWidth onClick={() => {
-                                ipfsService.addToIpfs(JSON.stringify(this.state), (resp: any) => this.setState({ newUser: { ...this.state.newUser, ipfsHash: resp } }))
-                            }}>Save</Button>
-                        </Grid>
-                        <Grid item xs={12} />
-                        <Grid item xs={8} sm={4} justifyContent="center">
-                            <TextField id="outlined-basic" label="IPFS HASH" variant="outlined" fullWidth disabled value={this.state.newUser.ipfsHash} />
-                        </Grid>
-                        <Grid item xs={4} sm={2} justifyContent="center">
-                            {/* Agregar visible despues de darle click a SAVE */}
-                            <Link href={'https:ipfs.io/ipfs/' + this.state.newUser.ipfsHash}>GO TO IPFS </Link>
+                            <Button variant="contained" fullWidth onClick={() => this.saveUser()}>Save</Button>
                         </Grid>
 
                     </Grid>

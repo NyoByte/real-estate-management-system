@@ -1,5 +1,5 @@
-const RealEstateManagement = artifacts.require("RealEstateManagement");
+var RealEstateManagement = artifacts.require("./RealEstateManagement.sol");
 
-module.exports = function (deployer) {
+module.exports = function(deployer) {
   deployer.deploy(RealEstateManagement);
 };

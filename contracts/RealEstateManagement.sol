@@ -88,7 +88,7 @@ contract RealEstateManagement{
         _firstName = _toLower(_firstName);
         _lastName = _toLower(_lastName);
         _province = _toLower(_province);
-        _province = _toLower(_district);
+        _district = _toLower(_district);
 
         require(userMapping[_walletaddress].exists == false, "User already exists");
         userMapping[_walletaddress].firstName = stringToBytes32(_firstName);
@@ -116,6 +116,10 @@ contract RealEstateManagement{
 
     function getUserAddressById(uint _id) public view returns (address accountaddress){
         return userArray[_id];
+    }
+
+    function getUsersArray() public view returns (address[] memory users){
+        return userArray;
     }
 
     //Funciones Sell
@@ -261,7 +265,7 @@ contract RealEstateManagement{
     }
 
     //Funciones Property
-    function createnNewProperty(string memory _province, string memory _district, string memory _addres, uint _area, address[] memory _owners, uint16[] memory _percentOwn) public{
+    function createnNewProperty(string memory _province, string memory _district, string memory _addres, uint _area, address[] memory _owners, uint16[] memory _percentOwn, string memory _ipfsHash) public{
         require(msg.sender == contractOwner, "You are not authorized");
         _province = _toLower(_province);
         _district = _toLower(_district);
@@ -279,6 +283,7 @@ contract RealEstateManagement{
 
         propertyMapping[propertyHash].owners = _owners;
         propertyMapping[propertyHash].percentOwn = _percentOwn;
+        propertyMapping[propertyHash].ipfsHash = stringToBytes32(_ipfsHash);
         /*
         for(uint i=0; i<_owners.length; i++){
             userPropertyOwnedMapping[_owners[i]].propertyHash = propertyHash;
@@ -294,7 +299,7 @@ contract RealEstateManagement{
         return propertyArray[id];
     }
 
-    function getPropertyByHash(bytes32 propertyHash) public view returns(bytes32 province, bytes32 district, bytes32 addres, uint area, address[] memory owners, uint[] memory percentOwn) {
+    function getPropertyByHash(bytes32 propertyHash) public view returns(bytes32 province, bytes32 district, bytes32 addres, uint area, address[] memory owners, uint[] memory percentOwn, bytes32 ipfsHash) {
         require(propertyMapping[propertyHash].exists == true, "Land doesn't exist");
         province = propertyMapping[propertyHash].province;
         district = propertyMapping[propertyHash].district;
@@ -302,7 +307,11 @@ contract RealEstateManagement{
         area = propertyMapping[propertyHash].area;
         owners = propertyMapping[propertyHash].owners;
         percentOwn = propertyMapping[propertyHash].percentOwn;
-        
+        ipfsHash = propertyMapping[propertyHash].ipfsHash;
+    }
+
+    function getPropertyArray() public view returns (bytes32[] memory property){
+        return propertyArray;
     }
 
 

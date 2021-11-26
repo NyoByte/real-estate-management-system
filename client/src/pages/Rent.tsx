@@ -21,7 +21,13 @@ type RentState = {
     },
 }
 
-class RentComponent extends React.Component<{}, RentState> {
+type RentProps = {
+    contract?: any,
+    accounts?: any,
+    web3?: any,
+}
+
+class RentComponent extends React.Component<RentProps, RentState> {
 
     state: RentState = {
         tab: 0,

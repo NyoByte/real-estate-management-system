@@ -16,7 +16,13 @@ type BuySellState = {
     }
 }
 
-class BuySellComponent extends React.Component<{}, BuySellState> {
+type BuySellProps = {
+    contract?: any,
+    accounts?: any,
+    web3?: any,
+}
+
+class BuySellComponent extends React.Component<BuySellProps, BuySellState> {
 
     state: BuySellState = {
         tab: 0,
