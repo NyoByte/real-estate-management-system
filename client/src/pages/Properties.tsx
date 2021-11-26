@@ -205,7 +205,7 @@ class PropertiesComponent extends React.Component<PropertiesProps, PropertiesSta
                             <Typography variant="h6" gutterBottom component="div">
                                 Extra info:
                             </Typography>
-                            {this.state.selectedProperty.extraInfo &&<Link href={'https:ipfs.io/ipfs/' + this.state.selectedProperty.extraInfo}>GO TO IPFS </Link>}
+                            {this.state.selectedProperty.extraInfo &&<Link target="_blank" href={'https:ipfs.io/ipfs/' + this.state.selectedProperty.extraInfo}>GO TO IPFS </Link>}
                         </Grid>
                     </Grid>
                 </TabPanelComponent>
