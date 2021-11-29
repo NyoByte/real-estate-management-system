@@ -45,7 +45,7 @@ contract RealEstateManagement{
         bytes32 district;
         bytes32 addres;
         uint area;
-        bytes32 ipfsHash;
+        string ipfsHash;
         bool exists;
     }
 
@@ -283,7 +283,7 @@ contract RealEstateManagement{
 
         propertyMapping[propertyHash].owners = _owners;
         propertyMapping[propertyHash].percentOwn = _percentOwn;
-        propertyMapping[propertyHash].ipfsHash = stringToBytes32(_ipfsHash);
+        propertyMapping[propertyHash].ipfsHash = _ipfsHash;
         /*
         for(uint i=0; i<_owners.length; i++){
             userPropertyOwnedMapping[_owners[i]].propertyHash = propertyHash;
@@ -299,7 +299,7 @@ contract RealEstateManagement{
         return propertyArray[id];
     }
 
-    function getPropertyByHash(bytes32 propertyHash) public view returns(bytes32 province, bytes32 district, bytes32 addres, uint area, address[] memory owners, uint[] memory percentOwn, bytes32 ipfsHash) {
+    function getPropertyByHash(bytes32 propertyHash) public view returns(bytes32 province, bytes32 district, bytes32 addres, uint area, address[] memory owners, uint[] memory percentOwn, string memory ipfsHash) {
         require(propertyMapping[propertyHash].exists == true, "Land doesn't exist");
         province = propertyMapping[propertyHash].province;
         district = propertyMapping[propertyHash].district;

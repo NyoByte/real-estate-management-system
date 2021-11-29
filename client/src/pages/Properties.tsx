@@ -110,7 +110,7 @@ class PropertiesComponent extends React.Component<PropertiesProps, PropertiesSta
                     area: res.area,
                     owners: res.owners,
                     ownersPercents: res.percentOwn,
-                    extraInfo: this.props.web3.utils.hexToUtf8(res.ipfsHash),
+                    extraInfo: res.ipfsHash,
                 }})
         })
     }
