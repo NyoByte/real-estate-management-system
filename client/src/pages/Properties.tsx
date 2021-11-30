@@ -165,6 +165,9 @@ class PropertiesComponent extends React.Component<PropertiesProps, PropertiesSta
                                 <Button variant="contained" onClick={this.getPropertyInfo} >Get info</Button>
                             </Grid>
                             <Typography variant="h6" gutterBottom component="div">
+                                {this.state.selectedProperty.hash}
+                            </Typography>
+                            <Typography variant="h6" gutterBottom component="div">
                                 Province: {this.state.selectedProperty.province}
                             </Typography>
                             <Typography variant="h6" gutterBottom component="div">
