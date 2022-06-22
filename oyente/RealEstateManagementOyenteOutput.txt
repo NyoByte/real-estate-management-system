@@ -1,0 +1,283 @@
+WARNING:root:You are using evm version 1.8.2. The supported version is 1.7.3
+WARNING:root:You are using solc version 0.4.21, The latest supported version is 0.4.19
+INFO:root:contract RealEstateManagement0421.sol:RealEstateManagement:
+INFO:symExec:   ============ Results ===========
+Exception symExec.TimeoutError: TimeoutError('Timer expired',) in <bound method FuncDeclRef.__del__ of /> ignored
+INFO:symExec:     EVM Code Coverage:                     36.4%
+INFO:symExec:     Integer Underflow:                     True
+INFO:symExec:     Integer Overflow:                      True
+INFO:symExec:     Parity Multisig Bug 2:                 False
+INFO:symExec:     Callstack Depth Attack Vulnerability:  False
+INFO:symExec:     Transaction-Ordering Dependence (TOD): True
+INFO:symExec:     Timestamp Dependency:                  False
+INFO:symExec:     Re-Entrancy Vulnerability:             False
+INFO:symExec:RealEstateManagement0421.sol:169:39: Warning: Integer Underflow.
+                uint leftPercentage = propertyMapping[sellMapping[_sellHash].propertyHash].percentOwn[i] - sellMapping[_sellHash].sellPercentage
+Integer Underflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115792089237316195423570985008687907853269984665640564039457584007913129639935
+    sellMapping[_sellHash].sellPercentage = 1
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+INFO:symExec:RealEstateManagement0421.sol:106:20: Warning: Integer Overflow.
+        province = userMapping[accountaddress].province
+Integer Overflow occurs if:
+    userMapping[accountaddress].exists = 255
+RealEstateManagement0421.sol:168:32: Warning: Integer Overflow.
+            if(propertyMapping[sellMapping[_sellHash].propertyHash
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115792089237316195423570985008687907853269984665640564039457584007913129639935
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:304:20: Warning: Integer Overflow.
+        district = propertyMapping[propertyHash].district
+Integer Overflow occurs if:
+    propertyMapping[propertyHash].exists = 255
+RealEstateManagement0421.sol:171:86: Warning: Integer Overflow.
+                    propertyMapping[sellMapping[_sellHash].propertyHash].owners[i] = propertyMapping[sellMapping[_sellHash].propertyHash].owners[propertyMapping[sellMapping[_sellHash].propertyHash].owners.length-1]
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115707280578206832975750986728652247764510265438590534329467746908052060635136
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:263:16: Warning: Integer Overflow.
+        return rentArray[_id]
+Integer Overflow occurs if:
+    _id = 115792089237316195423570985008687907853269984665640564039457575000713874898943
+    rentArray[_id] = 115792089237316195423570985008687907853269984665640564039457575000713874898944
+RealEstateManagement0421.sol:171:162: Warning: Integer Overflow.
+root@13c4c83b601b:/oyente/oyente#
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 7
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:345:9: Warning: Integer Overflow.
+        myArray[index]
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115792089237316195423570985008687907853269984665640564039457583990320943595520
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:243:9: Warning: Integer Overflow.
+        rentMapping[_rentHash].state
+Integer Overflow occurs if:
+    rentMapping[_rentHash].rentedTo = 0
+    rentMapping[_rentHash].agreedOwners.length = 0
+    rentMapping[_rentHash].securityDeposit = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:171:37: Warning: Integer Overflow.
+                    propertyMapping[sellMapping[_sellHash].propertyHash
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 57853640289103416487875493364326123882255132719295267164733873452926518689792
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:108:15: Warning: Integer Overflow.
+        dni = userMapping[accountaddress].dni
+Integer Overflow occurs if:
+    userMapping[accountaddress].exists = 255
+RealEstateManagement0421.sol:105:20: Warning: Integer Overflow.
+        lastName = userMapping[accountaddress].lastName
+Integer Overflow occurs if:
+    userMapping[accountaddress].exists = 255
+RealEstateManagement0421.sol:305:18: Warning: Integer Overflow.
+        addres = propertyMapping[propertyHash].addres
+Integer Overflow occurs if:
+    propertyMapping[propertyHash].exists = 255
+RealEstateManagement0421.sol:169:39: Warning: Integer Overflow.
+                uint leftPercentage = propertyMapping[sellMapping[_sellHash].propertyHash].percentOwn[i]
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115792089237316195423570985008687907853269984665640564039457584007913129639935
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:172:183: Warning: Integer Overflow.
+                    propertyMapping[sellMapping[_sellHash].propertyHash].owners = deleteFromAddressArray(propertyMapping[sellMapping[_sellHash].propertyHash].owners, propertyMapping[sellMapping[_sellHash].propertyHash
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 57853640289103416487875493364326123882255132719295267164733873452926518689792
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:168:82: Warning: Integer Overflow.
+            if(propertyMapping[sellMapping[_sellHash].propertyHash].owners[i] == sellMapping[_sellHash].buyFrom
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115792089237316195423570985008687907853269984665640564039457584007913129639935
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:224:43: Warning: Integer Overflow.
+        address[] memory rentPropOwners = rentMapping[_rentHash].rentedFrom
+Integer Overflow occurs if:
+    userMapping[msg.sender].exists = 255
+RealEstateManagement0421.sol:298:16: Warning: Integer Overflow.
+        return propertyArray[id]
+Integer Overflow occurs if:
+    id = 115792089237316195423570985008687907853269984665640564039457575000713874898943
+    propertyArray[id] = 115792089237316195423570985008687907853269984665640564039457575000713874898944
+RealEstateManagement0421.sol:306:16: Warning: Integer Overflow.
+        area = propertyMapping[propertyHash].area
+Integer Overflow occurs if:
+    propertyMapping[propertyHash].exists = 255
+RealEstateManagement0421.sol:158:16: Warning: Integer Overflow.
+        return sellArray[_id]
+Integer Overflow occurs if:
+    _id = 115792089237316195423570985008687907853269984665640564039457575000713874898943
+    sellArray[_id] = 115792089237316195423570985008687907853269984665640564039457575000713874898944
+RealEstateManagement0421.sol:267:5: Warning: Integer Overflow.
+    function createnNewProperty(string memory _province, string memory _district, string memory _addres, uint _area, address[] memory _owners, uint16[] memory _percentOwn, string memory _ipfsHash) public{
+    ^
+Spanning multiple lines.
+Integer Overflow occurs if:
+    _province = 115792089237316195423570985008687907853269984665640564039457584007913129639935
+RealEstateManagement0421.sol:345:26: Warning: Integer Overflow.
+        myArray[index] = myArray[myArray.length - 1]
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115792089237316195423570985008687907853269984665640564039457583867175641284608
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:167:41: Warning: Integer Overflow.
+        for(uint i=0; i<propertyMapping[sellMapping[_sellHash].propertyHash
+Integer Overflow occurs if:
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:178:37: Warning: Integer Overflow.
+                    propertyMapping[sellMapping[_sellHash].propertyHash
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 7
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:344:27: Warning: Integer Overflow.
+        address element = myArray[index]
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115792089237316195423570985008687907853269984665640564039457583867175641284608
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:168:16: Warning: Integer Overflow.
+            if(propertyMapping[sellMapping[_sellHash].propertyHash].owners[i]
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115792089237316195423570985008687907853269984665640564039457584007913129639935
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:303:20: Warning: Integer Overflow.
+        province = propertyMapping[propertyHash].province
+Integer Overflow occurs if:
+    propertyMapping[propertyHash].exists = 255
+RealEstateManagement0421.sol:183:25: Warning: Integer Overflow.
+        propertyMapping[sellMapping[_sellHash].propertyHash
+Integer Overflow occurs if:
+    sellMapping[_sellHash].sellTo = 0
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:171:102: Warning: Integer Overflow.
+                    propertyMapping[sellMapping[_sellHash].propertyHash].owners[i] = propertyMapping[sellMapping[_sellHash].propertyHash
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 7
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:169:55: Warning: Integer Overflow.
+                uint leftPercentage = propertyMapping[sellMapping[_sellHash].propertyHash
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115792089237316195423570985008687907853269984665640564039457584007913129639935
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:178:21: Warning: Integer Overflow.
+                    propertyMapping[sellMapping[_sellHash].propertyHash].percentOwn[i]
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 7
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:178:21: Warning: Integer Overflow.
+                    propertyMapping[sellMapping[_sellHash].propertyHash].percentOwn
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 7
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:1:1: Warning: Integer Overflow.
+}
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 1
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:346:16: Warning: Integer Overflow.
+        delete myArray[myArray.length - 1]
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115792089237316195423570985008687907853269984665640564039457583990320943595520
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:169:108: Warning: Integer Overflow.
+                uint leftPercentage = propertyMapping[sellMapping[_sellHash].propertyHash].percentOwn[i] - sellMapping[_sellHash].sellPercentage
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115792089237316195423570985008687907853269984665640564039457584007913129639935
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:107:20: Warning: Integer Overflow.
+        district = userMapping[accountaddress].district
+Integer Overflow occurs if:
+    userMapping[accountaddress].exists = 255
+RealEstateManagement0421.sol:169:39: Warning: Integer Overflow.
+                uint leftPercentage = propertyMapping[sellMapping[_sellHash].propertyHash].percentOwn
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 115792089237316195423570985008687907853269984665640564039457584007913129639935
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:171:21: Warning: Integer Overflow.
+                    propertyMapping[sellMapping[_sellHash].propertyHash].owners[i]
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 57853640289103416487875493364326123882255132719295267164733873452926518689792
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:172:122: Warning: Integer Overflow.
+                    propertyMapping[sellMapping[_sellHash].propertyHash].owners = deleteFromAddressArray(propertyMapping[sellMapping[_sellHash].propertyHash
+Integer Overflow occurs if:
+    propertyMapping[sellMapping[_sellHash].propertyHash].owners.length = 57853640289103416487875493364326123882255132719295267164733873452926518689792
+    sellMapping[_sellHash].buyFrom = 0
+    sellMapping[_sellHash].sellTo = 0
+    sellMapping[_sellHash].sellPercentage = 0
+    sellMapping[_sellHash].sellPrice = 57896044618658097711785492504343953926634992332820282019728792003956564819968
+RealEstateManagement0421.sol:258:9: Warning: Integer Overflow.
+        rentMapping[_rentHash].state
+Integer Overflow occurs if:
+    rentMapping[_rentHash].representative = 0
+RealEstateManagement0421.sol:116:16: Warning: Integer Overflow.
+        return userArray[_id]
+Integer Overflow occurs if:
+    _id = 115792089237316195423570985008687907853269984665640564039457575000713874898943
+    userArray[_id] = 115792089237316195423570985008687907853269984665640564039457575000713874898944
+RealEstateManagement0421.sol:84:5: Warning: Integer Overflow.
+    function createNewUser(string memory _firstName, string memory _lastName, string memory _province, string memory _district, address _walletaddress, string memory _dni) public{
+    ^
+Spanning multiple lines.
+Integer Overflow occurs if:
+    _firstName = 115792089237316195423570985008687907853269984665640564039457584007913129639935
+INFO:symExec:Flow1
+RealEstateManagement0421.sol:257:9: Warning: Transaction-Ordering Dependency.
+        rentMapping[_rentHash].rentedTo.transfer(msg.value)
+Flow2
+RealEstateManagement0421.sol:242:9: Warning: Transaction-Ordering Dependency.
+        rentMapping[_rentHash].representative.transfer(msg.value)
+INFO:symExec:   ====== Analysis Completed ======
