@@ -59,7 +59,7 @@ contract RealEstateManagement{
     event rentPayed(bytes32 rentHash);
     event rentTerminated(bytes32 rentHash);
 
-    function RealEstateManagement(){
+    function RealEstateManagement() public{
         contractOwner = msg.sender;
     }
 
@@ -83,6 +83,11 @@ contract RealEstateManagement{
     //Funciones User
     function createNewUser(string memory _firstName, string memory _lastName, string memory _province, string memory _district, address _walletaddress, string memory _dni) public{
         require(msg.sender == contractOwner);
+        require(bytes(_firstName).length<255);
+        require(bytes(_lastName).length<255);
+        require(bytes(_province).length<255);
+        require(bytes(_district).length<255);
+        require(userArray.length < 40000000);
         _firstName = _toLower(_firstName);
         _lastName = _toLower(_lastName);
         _province = _toLower(_province);
@@ -96,7 +101,7 @@ contract RealEstateManagement{
         userMapping[_walletaddress].dni = stringToBytes32(_dni);
         userMapping[_walletaddress].exists = true;
         userArray.push(_walletaddress);
-        emit creationOfUser(_walletaddress);
+        //emit creationOfUser(_walletaddress);
     }
 
     function getUserDetailsByAddress(address accountaddress) public view returns(bytes32 firstName, bytes32 lastName, bytes32 province, bytes32 district, bytes32 dni){
@@ -113,7 +118,8 @@ contract RealEstateManagement{
     }
 
     function getUserAddressById(uint _id) public view returns (address accountaddress){
-        return userArray[_id];
+        require(_id> 0 && _id < 40000000);
+        return userArray[_id-1];
     }
 
     function getUsersArray() public view returns (address[] memory users){
@@ -122,6 +128,8 @@ contract RealEstateManagement{
 
     //Funciones Sell
     function createSell(uint _price, bytes32 _propertyHash, address _sellTo, uint16 _sellPercentage) public{
+        require(sellArray.length < 10000000);
+        require(_price > 0 && _price < 10000000000);
         require(userMapping[msg.sender].exists == true);
         require(userMapping[_sellTo].exists == true);
 
@@ -139,7 +147,7 @@ contract RealEstateManagement{
         }
         require(isOwner);
 
-        uint _id = sellArray.length;
+        uint _id = sellArray.length + 1;
         bytes32 sellHash = keccak256(_id, _propertyHash);
         sellMapping[sellHash].id = _id;
         sellMapping[sellHash].propertyHash = _propertyHash;
@@ -147,21 +155,26 @@ contract RealEstateManagement{
         sellMapping[sellHash].buyFrom = msg.sender;
         sellMapping[sellHash].sellTo = _sellTo;
         sellMapping[sellHash].sellPercentage = _sellPercentage;
-        sellMapping[sellHash].sellPrice = _price*10**18;
+        sellMapping[sellHash].sellPrice = _price;
         sellMapping[sellHash].exists = true;
         sellMapping[sellHash].completed = false;
         sellArray.push(sellHash);
-        emit creationOfSell(_id, sellHash);
+        //emit creationOfSell(_id, sellHash);
+    }
+
+    function convertEtherToWei(uint value) public pure returns (uint){
+        return value*10**18;
     }
     
     function getSellHashById(uint _id) public view returns (bytes32 sellHash){
-        return sellArray[_id];
+        require(_id>0 && _id < 10000000);
+        return sellArray[_id-1];
     }
     
 
     function paySell(bytes32 _sellHash) public payable{
         require(msg.sender == sellMapping[_sellHash].sellTo);
-        require(msg.value == sellMapping[_sellHash].sellPrice);
+        require(msg.value == convertEtherToWei(sellMapping[_sellHash].sellPrice));
         sellMapping[_sellHash].buyFrom.transfer(msg.value);
 
         for(uint i=0; i<propertyMapping[sellMapping[_sellHash].propertyHash].owners.length; i++){
@@ -183,14 +196,16 @@ contract RealEstateManagement{
         propertyMapping[sellMapping[_sellHash].propertyHash].owners.push(msg.sender);
         propertyMapping[sellMapping[_sellHash].propertyHash].percentOwn.push(sellMapping[_sellHash].sellPercentage);
         sellMapping[_sellHash].completed = true;
-        emit sellPayed(_sellHash);
+        //emit sellPayed(_sellHash);
     }
 
     //Funciones Rent
     function createRent(bytes32 _propertyHash, address _rentedTo, uint _securityDeposit, uint _rentValue) public{
+        require(rentArray.length < 10000000);
         require(userMapping[msg.sender].exists == true);
         require(userMapping[_rentedTo].exists == true);
-
+        require(_rentValue > 0 && _rentValue < 10000000000);
+        require(_securityDeposit > 0 && _securityDeposit<10000000000 && _securityDeposit < _rentValue);
         //Verificar que sea owner
         address[] memory propOwners = propertyMapping[_propertyHash].owners;
         bool isOwner;
@@ -203,7 +218,7 @@ contract RealEstateManagement{
         }
         require(isOwner);
 
-        uint _id = rentArray.length;
+        uint _id = rentArray.length + 1;
         bytes32 rentHash = keccak256(_id, _propertyHash);
         rentMapping[rentHash].id = _id;
         rentMapping[rentHash].propertyHash = _propertyHash;
@@ -211,12 +226,12 @@ contract RealEstateManagement{
         rentMapping[rentHash].agreedOwners = new bool[](propOwners.length);
         rentMapping[rentHash].agreedOwners[ownerIndex] = true;
         rentMapping[rentHash].rentedTo = _rentedTo;
-        rentMapping[rentHash].securityDeposit = _securityDeposit*10**18;
-        rentMapping[rentHash].rentValue = _rentValue*10**18;
+        rentMapping[rentHash].securityDeposit = _securityDeposit;
+        rentMapping[rentHash].rentValue = _rentValue;
         rentMapping[rentHash].representative = msg.sender;
         rentMapping[rentHash].state = RentState.CREATED;
         rentArray.push(rentHash);
-        emit creationOfRent(_id, rentHash);
+        //emit creationOfRent(_id, rentHash);
     }
 
     function agreeRent(bytes32 _rentHash) public{
@@ -235,37 +250,44 @@ contract RealEstateManagement{
 
     function paySecurityDeposit(bytes32 _rentHash) public payable{
         require(msg.sender == rentMapping[_rentHash].rentedTo);
-        require(msg.value == rentMapping[_rentHash].securityDeposit);
+        require(msg.value == convertEtherToWei(rentMapping[_rentHash].securityDeposit));
         for(uint i=0; i<rentMapping[_rentHash].agreedOwners.length; i++){
             require(rentMapping[_rentHash].agreedOwners[i]==true);
         }
         rentMapping[_rentHash].representative.transfer(msg.value);
         rentMapping[_rentHash].state = RentState.STARTED;
-        emit startOfRent(_rentHash);
+        //emit startOfRent(_rentHash);
     }
 
     function payRent(bytes32 _rentHash) public payable{
         require(rentMapping[_rentHash].state == RentState.STARTED);
         require(msg.sender == rentMapping[_rentHash].rentedTo);
-        require(msg.value == rentMapping[_rentHash].rentValue);
+        require(msg.value == convertEtherToWei(rentMapping[_rentHash].rentValue));
         rentMapping[_rentHash].representative.transfer(msg.value);
-        emit rentPayed(_rentHash);
+        //emit rentPayed(_rentHash);
     }
 
     function terminateRent(bytes32 _rentHash) public payable{
         require(msg.sender == rentMapping[_rentHash].representative);
         rentMapping[_rentHash].rentedTo.transfer(msg.value);
         rentMapping[_rentHash].state = RentState.TERMINATED;
-        emit rentTerminated(_rentHash);
+        //emit rentTerminated(_rentHash);
     }
 
     function getRentHashById(uint _id) public view returns(bytes32 _rentHash){
-        return rentArray[_id];
+        require(_id>0 && _id < 10000000);
+        return rentArray[_id-1];
     }
 
     //Funciones Property
     function createnNewProperty(string memory _province, string memory _district, string memory _addres, uint _area, address[] memory _owners, uint16[] memory _percentOwn, string memory _ipfsHash) public{
+        require(propertyArray.length<400000000);
         require(msg.sender == contractOwner);
+        require(bytes(_province).length<255);
+        require(bytes(_district).length<255);
+        require(bytes(_addres).length<255);
+        require(_area<10000);
+        require(_owners.length>0 && _owners.length<10);
         _province = _toLower(_province);
         _district = _toLower(_district);
         _addres = _toLower(_addres);
@@ -274,6 +296,13 @@ contract RealEstateManagement{
         for(uint i=0; i<_owners.length;i++){
             require(userMapping[_owners[i]].exists==true);
         }
+
+        uint sum = 0;
+        for(uint j=0; j<_percentOwn.length;j++){
+            require(_percentOwn[j]>0 && _percentOwn[j]<=100);
+            sum = sum + _percentOwn[j];
+        }
+        require(sum==100);
         //require(userMapping[accountaddress].exists);
         propertyMapping[propertyHash].province = stringToBytes32(_province);
         propertyMapping[propertyHash].district = stringToBytes32(_district);
@@ -291,11 +320,12 @@ contract RealEstateManagement{
         */
         propertyMapping[propertyHash].exists = true;
         propertyArray.push(propertyHash);
-        emit addNewProperty(propertyHash);
+        //emit addNewProperty(propertyHash);
     }
     
     function getPropertyHashById(uint id) public view returns(bytes32 propertyHash) {
-        return propertyArray[id];
+        require(id>0 && id < 400000000);
+        return propertyArray[id-1];
     }
 
     function getPropertyByHash(bytes32 propertyHash) public view returns(bytes32 province, bytes32 district, bytes32 addres, uint area, address[] memory owners, uint[] memory percentOwn, string memory ipfsHash) {
@@ -341,7 +371,6 @@ contract RealEstateManagement{
     }
 
     function deleteFromAddressArray(address[] storage myArray, uint index) internal returns (address[]){
-        address element = myArray[index];
         myArray[index] = myArray[myArray.length - 1];
         delete myArray[myArray.length - 1];
         myArray.length--;
@@ -349,7 +378,6 @@ contract RealEstateManagement{
     }
 
     function deleteFromUintArray(uint[] storage myArray, uint index) internal returns (uint[]){
-        uint element = myArray[index];
         myArray[index] = myArray[myArray.length - 1];
         delete myArray[myArray.length - 1];
         myArray.length--;
